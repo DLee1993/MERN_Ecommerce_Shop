@@ -26,8 +26,8 @@ const ProductScreen = ({ match }) => {
                         </ListGroup.Item>
                         <ListGroup.Item>
                           <Row>
-                            <Col md={9}>Price: ${product.price}</Col>
-                            <Col>{product.countInStock > 0 ? "In Stock" : "Out of Stock"}</Col>
+                            <Col>Price: ${product.price}</Col>
+                            <Col style={{textAlign: 'right'}}>{product.countInStock > 0 ? "In Stock" : "Out of Stock"}</Col>
                           </Row>
                         </ListGroup.Item>
                         <ListGroup.Item>Description: {product.description}</ListGroup.Item>
