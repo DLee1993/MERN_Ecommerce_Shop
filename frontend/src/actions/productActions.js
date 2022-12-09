@@ -24,7 +24,7 @@ export const listProducts = () => async (dispatch) => {
         // - if it fails send the dispatch fail
         dispatch({
             type: PRODUCT_LIST_FAIL,
-            payload: error,
+            payload: error.message,
         });
     }
 };
