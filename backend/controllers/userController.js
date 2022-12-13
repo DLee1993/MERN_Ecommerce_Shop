@@ -1,4 +1,5 @@
 import User from "../models/UserModel.js";
+import generateToken from "../utils/generateToken.js";
 
 // - Description ( Authenticate the user and generate a token  )
 // - Route ( /users/login )
@@ -18,16 +19,40 @@ const authUser = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 isAdmin: user.isAdmin,
-                token: null,
+                token: generateToken(user._id),
             });
         } else {
             res.status(401);
-            res.json({Error: 'Invalid Credentials'})
+            res.json({ Error: "Invalid Credentials" });
             throw new Error("Invalid Credentials");
         }
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 };
 
-export { authUser };
+// - Description ( Get the user profile)
+// - Route ( /users/profile )
+// - Request Type ( GET )
+// - Authentication ( Private route - authentication needed )
+const getUserProfile = async (req, res) => {
+    const user = await User.findById(req.user._id);
+    try {
+        if (user) {
+            res.json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin,
+            });
+        } else {
+            res.status(401);
+            res.json({ msg: "User not found" });
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export { authUser, getUserProfile };
