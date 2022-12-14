@@ -31,6 +31,52 @@ const authUser = async (req, res) => {
     }
 };
 
+// - Description ( Register a new user )
+// - Route ( /register )
+// - Request Type ( POST )
+// - Authentication ( Public route - no authentication needed )
+const registerUser = async (req, res) => {
+    try {
+        // - destructure name, email and password from req
+        const { name, email, password } = req.body;
+
+        // - check to see if the user already exists
+        const userExists = await User.findOne({ email });
+
+        // - if the user exits
+        if (userExists) {
+            res.status(400);
+            res.json({ Error: "User already exists" });
+            throw new Error("User already exists");
+        }
+
+        // - if the user doesn't exist, create the new user
+        const newUser = await User.create({
+            name,
+            email,
+            password,
+        });
+
+        // - if the newUser exists we need to send the json data
+        if (newUser) {
+            res.status(201);
+            res.json({
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                isAdmin: newUser.isAdmin,
+                token: generateToken(newUser._id),
+            });
+        } else {
+            res.status(400);
+            res.json({ Error: "Invalid user data" });
+            throw new Error("Invalid user data");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 // - Description ( Get the user profile)
 // - Route ( /users/profile )
 // - Request Type ( GET )
@@ -55,4 +101,4 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-export { authUser, getUserProfile };
+export { authUser, registerUser, getUserProfile };
