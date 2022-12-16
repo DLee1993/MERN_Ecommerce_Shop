@@ -101,4 +101,35 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-export { authUser, registerUser, getUserProfile };
+// - Description ( update the user profile)
+// - Route ( /users/profile )
+// - Request Type ( PUT )
+// - Authentication ( Private route - authentication needed )
+const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user._id);
+    try {
+        if (user) {
+            (user.name = req.body.name || user.name), (user.email = req.body.email || user.email);
+            if (req.body.password) {
+                user.password = req.body.password;
+            }
+            const updateUser = await user.save();
+
+            res.json({
+                _id: updateUser._id,
+                name: updateUser.name,
+                email: updateUser.email,
+                isAdmin: updateUser.isAdmin,
+                token: generateToken(updateUser._id),
+            });
+        } else {
+            res.status(401);
+            res.json({ msg: "User not found" });
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export { authUser, registerUser, getUserProfile, updateUserProfile };
