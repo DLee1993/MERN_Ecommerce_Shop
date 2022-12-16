@@ -1,4 +1,7 @@
 import {
+    USER_DETAILS_FAIL,
+    USER_DETAILS_REQ,
+    USER_DETAILS_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGIN_REQ,
     USER_LOGIN_SUCCESS,
@@ -36,6 +39,22 @@ export const userRegisterReducer = (state = {}, action) => {
         case USER_REGISTER_SUCCESS:
             return { userInfo: payload, loading: false };
         case USER_REGISTER_FAIL:
+            return { error: payload, loading: false };
+        default:
+            return state;
+    }
+};
+
+// - the below switch statement checks the
+// - dispatch that is sent back and returns the relevant data based on the dispatch
+export const userDetailsReducer = (state = {user: {}}, action) => {
+    const { payload } = action;
+    switch (action.type) {
+        case USER_DETAILS_REQ:
+            return { ...state, loading: true };
+        case USER_DETAILS_SUCCESS:
+            return { user: payload, loading: false };
+        case USER_DETAILS_FAIL:
             return { error: payload, loading: false };
         default:
             return state;
