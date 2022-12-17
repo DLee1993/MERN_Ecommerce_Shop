@@ -14,6 +14,7 @@ import {
     USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
 
+//!!!! USE THIS FOR YOUR PROJECT
 // - the below switch statement checks the
 // - dispatch that is sent back and returns the relevant data based on the dispatch
 export const userLoginReducer = (state = {}, action) => {
@@ -32,6 +33,7 @@ export const userLoginReducer = (state = {}, action) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 // - the below switch statement checks the
 // - dispatch that is sent back and returns the relevant data based on the dispatch
 export const userRegisterReducer = (state = {}, action) => {
@@ -48,6 +50,7 @@ export const userRegisterReducer = (state = {}, action) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 // - the below switch statement checks the
 // - dispatch that is sent back and returns the relevant data based on the dispatch
 export const userDetailsReducer = (state = { user: {} }, action) => {
@@ -64,6 +67,7 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 // - the below switch statement checks the
 // - dispatch that is sent back and returns the relevant data based on the dispatch
 export const userUpdateProfileReducer = (state = {}, action) => {

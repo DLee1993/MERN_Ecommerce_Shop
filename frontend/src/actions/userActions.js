@@ -15,6 +15,7 @@ import {
     USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
 
+//!!!! USE THIS FOR YOUR PROJECT
 export const login = (email, password) => async (dispatch) => {
     try {
         dispatch({
@@ -43,6 +44,7 @@ export const login = (email, password) => async (dispatch) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 export const logout = () => (dispatch) => {
     localStorage.removeItem("userInfo");
     dispatch({
@@ -50,6 +52,7 @@ export const logout = () => (dispatch) => {
     });
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 export const register = (name, email, password) => async (dispatch) => {
     try {
         dispatch({
@@ -83,6 +86,7 @@ export const register = (name, email, password) => async (dispatch) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 export const getUserDetails = (id) => async (dispatch, getState) => {
     try {
         dispatch({
@@ -117,6 +121,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     }
 };
 
+//!!!! USE THIS FOR YOUR PROJECT
 export const updateUserProfile = (user) => async (dispatch, getState) => {
     try {
         dispatch({

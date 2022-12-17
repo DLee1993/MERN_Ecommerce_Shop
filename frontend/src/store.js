@@ -9,6 +9,8 @@
  * this allows us to run some code before dispatching the relevant action ( i.e. USER_LOADED)
  */
 
+//!!!! USE THIS FOR YOUR PROJECT
+
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { productListReducer, productDetailsReducer } from "./reducers/productReducers";
