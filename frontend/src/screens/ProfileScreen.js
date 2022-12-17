@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../actions/userActions";
 
 const ProfileScreen = () => {
     const [name, setName] = useState("");
@@ -15,19 +15,28 @@ const ProfileScreen = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // - get the user and error from the userDetails state
     const userDetails = useSelector((state) => state.userDetails);
     const { error, user } = userDetails;
 
+    // - get the user info from the userLogin state
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
 
+    // - get the success value from the updateUserProfile state
+    const userUpdateProfile = useSelector((state) => state.updateUserProfile);
+    const { success } = userUpdateProfile;
+
     useEffect(() => {
+        // - if theres no userInfo then navigate back to the login page
         if (!userInfo) {
             navigate("/login");
         } else {
+            // - if there is no name then dispatch to retrieve the user details
             if (!user.name) {
                 dispatch(getUserDetails("profile"));
             } else {
+                // - if there is a name then set the name to the user.name and and email to the user.email
                 setName(user.name);
                 setEmail(user.email);
             }
@@ -39,15 +48,18 @@ const ProfileScreen = () => {
         // Dispatch Register
         password !== confirmPassword
             ? setMessage("Passwords do not match")
-            : console.log("update profile here");
+            : dispatch(updateUserProfile({ id: user._id, name, email, password }));
     };
 
     return (
         <Row>
             <Col md={3}>
                 <h1>Profile</h1>
+                {/* The below will check to see if the values are true, if they are they will show the message */}
                 {message && <Message variant='danger'>{message}</Message>}
                 {error && <Message variant='danger'>{error}</Message>}
+                {success && <Message variant='success'>Profile Updated</Message>}
+                {/**/}
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId='name'>
                         <Form.Label>Name</Form.Label>
@@ -79,7 +91,7 @@ const ProfileScreen = () => {
                     <Form.Group controlId='confirmPassword'>
                         <Form.Label>confirmPassword</Form.Label>
                         <Form.Control
-                            type='confirmPassword'
+                            type='password'
                             placeholder='Enter confirmPassword'
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
