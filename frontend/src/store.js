@@ -15,7 +15,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { productListReducer, productDetailsReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
-import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer } from "./reducers/userReducers";
+import {
+    userLoginReducer,
+    userRegisterReducer,
+    userDetailsReducer,
+    userUpdateProfileReducer,
+} from "./reducers/userReducers";
 
 const getItemsFromLocalStorage = localStorage.getItem("cartItems")
     ? JSON.parse(localStorage.getItem("cartItems"))
@@ -25,6 +30,15 @@ const userInfoFromLocalStorage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null;
 
+const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
+    ? JSON.parse(localStorage.getItem("shippingAddress"))
+    : {};
+
+const initialState = {
+    cart: { cartItems: getItemsFromLocalStorage, shippingAddress: shippingAddressFromLocalStorage },
+    userLogin: { userInfo: userInfoFromLocalStorage },
+};
+
 const store = configureStore({
     reducer: {
         productList: productListReducer,
@@ -33,12 +47,9 @@ const store = configureStore({
         userLogin: userLoginReducer,
         userRegister: userRegisterReducer,
         userDetails: userDetailsReducer,
-        updateUserProfile: userUpdateProfileReducer
+        updateUserProfile: userUpdateProfileReducer,
     },
-    initialState: {
-        cart: { cartItems: getItemsFromLocalStorage },
-        userLogin: { userInfo: userInfoFromLocalStorage },
-    },
+    preloadedState: initialState,
     middleware: [thunk],
 });
 
