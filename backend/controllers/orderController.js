@@ -36,4 +36,18 @@ const addOrderItems = async (req, res) => {
     }
 };
 
-export { addOrderItems };
+// - Description ( Get an order by id )
+// - Route ( /orders/:id )
+// - Request Type ( GET )
+// - Authentication ( Private route - authentication needed )
+const getOrderById = async (req, res) => {
+    const order = await Order.findById(req.params.id).populate("User", "name email");
+    if (order) {
+        res.json(order);
+    } else {
+        res.status(404);
+        throw new Error("Order not found");
+    }
+};
+
+export { addOrderItems, getOrderById };
