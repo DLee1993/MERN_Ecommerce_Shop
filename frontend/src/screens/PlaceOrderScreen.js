@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
+import { createOrder } from "../actions/orderActions";
 
 const PlaceOrderScreen = () => {
     const dispatch = useDispatch();
@@ -13,22 +14,45 @@ const PlaceOrderScreen = () => {
         shippingAddress: { address, city, postalCode, country },
     } = cart;
 
-    // calculate pricing
-    const formatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        minimumFractionDigits: 2,
-    });
-    const cartItems = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-    const shippingPrice = cartItems > 100 ? 0 : 100;
-    const taxPrice = cartItems * 0.15;
-    const totalPrice = cartItems + shippingPrice + taxPrice;
-    cart.itemsPrice = formatter.format(cartItems);
-    cart.shippingPrice = formatter.format(shippingPrice);
-    cart.taxPrice = formatter.format(taxPrice);
-    cart.totalPrice = formatter.format(totalPrice);
+    //   Calculate prices
+    const addDecimals = (num) => {
+        return (Math.round(num * 100) / 100).toFixed(2);
+    };
 
-    const placeOrderHandler = () => {};
+    cart.itemsPrice = addDecimals(
+        cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    );
+    cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100);
+    cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
+    cart.totalPrice = (
+        Number(cart.itemsPrice) +
+        Number(cart.shippingPrice) +
+        Number(cart.taxPrice)
+    ).toFixed(2);
+
+    const orderCreate = useSelector((state) => state.orderCreate);
+    const { order, success, error } = orderCreate;
+
+    useEffect(() => {
+        if (success) {
+            navigate(`/orders/${order._id}`);
+        }
+    }, [navigate, success, order]);
+
+    const placeOrderHandler = () => {
+        dispatch(
+            createOrder({
+                orderItems: cart.cartItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: cart.itemsPrice,
+                shippingPrice: cart.shippingPrice,
+                taxPrice: cart.taxPrice,
+                totalPrice: cart.totalPrice,
+            })
+        );
+    };
+
     return (
         <>
             <CheckoutSteps step1 step2 step3 step4 />
@@ -121,6 +145,9 @@ const PlaceOrderScreen = () => {
                                     <Col>Total</Col>
                                     <Col>{cart.totalPrice}</Col>
                                 </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                {error && <Message variant='danger'>{error}</Message>}
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Button
