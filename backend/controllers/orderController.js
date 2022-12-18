@@ -80,9 +80,11 @@ const updateOrderToPaid = async (req, res) => {
 // - Route ( /orders/myorders )
 // - Request Type ( PUT )
 // - Authentication ( Private route - authentication needed )
+//! FIX - Code is fetching all orders not users orders
 const getMyOrders = async (req, res) => {
-    const orders = await Order.find({ user: req.user._id }); 
-    res.json(orders)
+    const orders = await Order.find({ user: req.user._id });
+    console.log(req.user.id)
+    res.json(orders);
 };
 
 export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders };
