@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
-import { myOrders } from "../actions/orderActions";
+import { listMyOrders } from "../actions/orderActions";
 
 const ProfileScreen = () => {
     const [name, setName] = useState("");
@@ -30,8 +30,8 @@ const ProfileScreen = () => {
     const userUpdateProfile = useSelector((state) => state.updateUserProfile);
     const { success } = userUpdateProfile;
 
-    const myOrdersList = useSelector((state) => state.myOrders);
-    const { loading: loadingOrders, error: orderError, orders } = myOrdersList;
+    const myOrders = useSelector((state) => state.myOrders);
+    const { loading: loadingOrders, error: orderError, orders } = myOrders;
 
     useEffect(() => {
         // - if theres no userInfo then navigate back to the login page
@@ -41,7 +41,7 @@ const ProfileScreen = () => {
             // - if there is no name then dispatch to retrieve the user details
             if (!user.name) {
                 dispatch(getUserDetails("profile"));
-                dispatch(myOrders());
+                dispatch(listMyOrders());
             } else {
                 // - if there is a name then set the name to the user.name and and email to the user.email
                 setName(user.name);
