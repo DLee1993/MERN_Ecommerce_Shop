@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import { myOrders } from "../actions/orderActions";
 
 const ProfileScreen = () => {
     const [name, setName] = useState("");
@@ -27,6 +30,9 @@ const ProfileScreen = () => {
     const userUpdateProfile = useSelector((state) => state.updateUserProfile);
     const { success } = userUpdateProfile;
 
+    const myOrdersList = useSelector((state) => state.myOrders);
+    const { loading: loadingOrders, error: orderError, orders } = myOrdersList;
+
     useEffect(() => {
         // - if theres no userInfo then navigate back to the login page
         if (!userInfo) {
@@ -35,6 +41,7 @@ const ProfileScreen = () => {
             // - if there is no name then dispatch to retrieve the user details
             if (!user.name) {
                 dispatch(getUserDetails("profile"));
+                dispatch(myOrders());
             } else {
                 // - if there is a name then set the name to the user.name and and email to the user.email
                 setName(user.name);
@@ -104,6 +111,61 @@ const ProfileScreen = () => {
             </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
+                {loadingOrders && <Loader />}
+                {orderError ? (
+                    <Message variant='danger'>{orderError}</Message>
+                ) : (
+                    <Table striped bordered hover responsive className='table-sm'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>DATE</th>
+                                <th>TOTAL</th>
+                                <th>PAID</th>
+                                <th>DELIVERED</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders &&
+                                orders.map((order) => (
+                                    <tr key={order._id}>
+                                        <td>{order._id}</td>
+                                        <td>{order.createdAt.substring(0, 10)}</td>
+                                        <td>{order.totalPrice}</td>
+                                        <td style={{textAlign: 'center'}}>
+                                            {order.isPaid ? (
+                                                <i
+                                                    className='fas fa-check'
+                                                    style={{ color: "green" }}
+                                                ></i>
+                                            ) : (
+                                                <i
+                                                    className='fas fa-times'
+                                                    style={{ color: "red" }}
+                                                ></i>
+                                            )}
+                                        </td>
+                                        <td style={{textAlign: 'center'}}>
+                                            {order.isDelivered ? (
+                                                order.deliveredAt.substring(0, 10)
+                                            ) : (
+                                                <i
+                                                    className='fas fa-times'
+                                                    style={{ color: "red" }}
+                                                ></i>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <LinkContainer to={`/order/${order._id}`}>
+                                                <Button className='btn-sm' variant='light'>Details</Button>
+                                            </LinkContainer>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
+                )}
             </Col>
         </Row>
     );
