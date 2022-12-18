@@ -4,7 +4,6 @@ const OrderSchema = mongoose.Schema(
     {
         User: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
             ref: "User",
         },
         orderItems: [

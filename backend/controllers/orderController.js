@@ -41,7 +41,9 @@ const addOrderItems = async (req, res) => {
 // - Request Type ( GET )
 // - Authentication ( Private route - authentication needed )
 const getOrderById = async (req, res) => {
-    const order = await Order.findById(req.params.id).populate("User", "name email");
+    const order = await Order.findById(req.params.id).populate([
+        { path: 'User', select: 'name email' }
+      ]);
     if (order) {
         res.json(order);
     } else {
