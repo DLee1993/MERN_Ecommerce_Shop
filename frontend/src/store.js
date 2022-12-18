@@ -15,7 +15,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { productListReducer, productDetailsReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
-import { orderCreateReducer, orderDetailsReducer } from "./reducers/orderReducers";
+import { orderCreateReducer, orderDetailsReducer, orderPayReducer } from "./reducers/orderReducers";
 import {
     userLoginReducer,
     userRegisterReducer,
@@ -51,6 +51,7 @@ const store = configureStore({
         updateUserProfile: userUpdateProfileReducer,
         orderCreate: orderCreateReducer,
         orderDetails: orderDetailsReducer,
+        orderPay: orderPayReducer,
     },
     preloadedState: initialState,
     middleware: [thunk],

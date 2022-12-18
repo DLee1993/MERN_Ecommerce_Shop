@@ -31,6 +31,9 @@ app.use("/users", userRoutes);
 // - all of these routes will start will /users
 app.use("/orders", orderRoutes);
 
+
+app.get("/config/paypal", (req, res) => res.send(process.env.PAYPAL_CLIENT_ID))
+
 app.use(notFound);
 app.use(errorHandler);
 
